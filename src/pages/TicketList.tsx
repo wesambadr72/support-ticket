@@ -1,25 +1,28 @@
 import { Table, Button, Tag, Select, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { dataSource } from '../data/tickets';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
+import TicketToolbar from '../components/layout/TicketToolbar';
+import { ticketService } from '../services/ticket.service';
+import { STATUS_FILTER_VALUES } from '../constants/tickets';
+import { priorityColor, priorityLabelKey, statusLabelKey } from '../utils/ticket';
+import type { Priority, Status } from '../types/ticket';
 
 function TicketList() {
   const { t } = useTranslation('tickets');
-  const [statusFilter, setStatusFilter] = useState<string>('All');
+  const [statusFilter, setStatusFilter] = useState<Status | 'All'>('All');
 
   const filteredData = useMemo(() => {
-    if (statusFilter === 'All') return dataSource;
-    return dataSource.filter((ticket) => ticket.status === statusFilter);
+    const tickets = ticketService.getAll();
+    if (statusFilter === 'All') return tickets;
+    return tickets.filter((ticket) => ticket.status === statusFilter);
   }, [statusFilter]);
 
-  const filterOptions = [
-    { value: 'All', label: t('all') },
-    { value: 'Open', label: t('open') },
-    { value: 'In Progress', label: t('inProgress') },
-    { value: 'Closed', label: t('closed') },
-  ];
+  const filterOptions = STATUS_FILTER_VALUES.map((value) => ({
+    value,
+    label: value === 'All' ? t('all') : t(statusLabelKey[value]),
+  }));
 
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
@@ -31,8 +34,20 @@ function TicketList() {
         <Link to={`/tickets/${record.id}`}>{text}</Link>
       ),
     },
-    { title: t('status'), dataIndex: 'status', key: 'status', render: (status: string) => <Tag>{status === 'Open' ? t('open') : status === 'In Progress' ? t('inProgress') : t('closed')}</Tag> },
-    { title: t('priority'), dataIndex: 'priority', key: 'priority', render: (priority: string) => <Tag color={priority === 'High' ? 'red' : priority === 'Medium' ? 'orange' : 'green'}>{priority === 'High' ? t('high') : priority === 'Medium' ? t('medium') : t('low')}</Tag> },
+    {
+      title: t('status'),
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: Status) => <Tag>{t(statusLabelKey[status])}</Tag>,
+    },
+    {
+      title: t('priority'),
+      dataIndex: 'priority',
+      key: 'priority',
+      render: (priority: Priority) => (
+        <Tag color={priorityColor[priority]}>{t(priorityLabelKey[priority])}</Tag>
+      ),
+    },
     {
       title: t('action'),
       key: 'actions',
@@ -45,23 +60,25 @@ function TicketList() {
   ];
 
   return (
-    <div>
-      <div className='flex justify-between items-center mb-4'>
-        <h2 className='text-3xl text-center flex-1'>{t('mainTitle')}</h2>
-        <Space>
-        <Select
-          value={statusFilter}
-          onChange={setStatusFilter}
-          options={filterOptions}
-          style={{ width: 160 }}
-        />
-        <Link to="/tickets/new">
-          <Button type="primary" icon={<PlusOutlined />}>{t('createTicket')}</Button>
-        </Link>
-        </Space>
+    <TicketToolbar>
+      <div>
+        <div className='flex justify-between items-center mb-4'>
+          <h2 className='text-3xl text-center flex-1'>{t('mainTitle')}</h2>
+          <Space>
+            <Select
+              value={statusFilter}
+              onChange={setStatusFilter}
+              options={filterOptions}
+              style={{ width: 160 }}
+            />
+            <Link to="/tickets/new">
+              <Button type="primary" icon={<PlusOutlined />}>{t('createTicket')}</Button>
+            </Link>
+          </Space>
+        </div>
+        <Table rowKey="id" dataSource={filteredData} columns={columns} />
       </div>
-      <Table rowKey="id" dataSource={filteredData} columns={columns} />
-    </div>
+    </TicketToolbar>
   );
 }
 

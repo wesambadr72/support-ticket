@@ -4,9 +4,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpBackend from 'i18next-http-backend';
 
 i18n
-  .use(HttpBackend)              // يحمل ملفات JSON من /public/locales
-  .use(LanguageDetector)         // يكتشف لغة المتصفح
-  .use(initReactI18next)         // يربط مع React
+  .use(HttpBackend) // يحمل ملفات JSON من /public/locales
+  .use(LanguageDetector) // يكتشف لغة المتصفح
+  .use(initReactI18next) // يربط مع React
   .init({
     fallbackLng: 'en',
     supportedLngs: ['en', 'ar'],
@@ -15,9 +15,9 @@ i18n
       caches: ['localStorage'],
     },
     backend: {
-      loadPath: '../locales/{{lng}}/{{ns}}.json',  // ملفات في public/locales
+      loadPath: '../locales/{{lng}}/{{ns}}.json', // ملفات في public/locales
     },
-    ns: ['tickets'],   // namespaces
+    ns: ['tickets'], // namespaces
     defaultNS: 'tickets',
     interpolation: { escapeValue: false },
     react: { useSuspense: true },

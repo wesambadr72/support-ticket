@@ -1,31 +1,35 @@
-import { dataSource } from '../data/tickets';
 import { Descriptions, Card, Button, Statistic, Select, message } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import TicketToolbar from '../components/layout/TicketToolbar';
+import { ticketService } from '../services/ticket.service';
+import { TICKET_STATUSES } from '../constants/tickets';
+import { statusLabelKey } from '../utils/ticket';
+import type { Status } from '../types/ticket';
 
 function TicketView() {
   const { id } = useParams();
-  const ticket = dataSource.find((t) => t.id === id);
+  const ticket = ticketService.getById(id);
   const { t } = useTranslation('tickets');
-  const [currentStatus, setCurrentStatus] = useState<string>(ticket?.status);
+  const [currentStatus, setCurrentStatus] = useState<Status | undefined>(ticket?.status);
 
-  const statusOptions = [
-    { value: 'Open', label: t('open') },
-    { value: 'In Progress', label: t('inProgress') },
-    { value: 'Closed', label: t('closed') },
-  ];
+  const statusOptions = TICKET_STATUSES.map((value) => ({
+    value,
+    label: t(statusLabelKey[value]),
+  }));
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: Status) => {
     setCurrentStatus(value);
     if (ticket) {
-      ticket.status = value;
-      message.success(t('success'))
+      ticketService.updateStatus(ticket.id, value);
+      message.success(t('success'));
     }
   };
 
   return (
-    <div className='p-6 max-w-2xl mx-auto'>
+    <TicketToolbar>
+      <div className='p-6 max-w-1/2 mx-auto'>
       <Card
         title={t('TicketDetail')}
         extra={
@@ -48,11 +52,12 @@ function TicketView() {
           </Descriptions.Item>
           <Descriptions.Item label={t('priority')}>{ticket?.priority}</Descriptions.Item>
         </Descriptions>
-          <Button type="primary" color='orange' variant="outlined" style={{marginTop: 16}}>
-            <Link to="/tickets" style={{textDecoration: 'none'}}>{t('back')}</Link>
-          </Button>
+        <Button type="primary" color='orange' variant="outlined" style={{ marginTop: 16 }}>
+          <Link to="/tickets" style={{ textDecoration: 'none' }}>{t('back')}</Link>
+        </Button>
       </Card>
-    </div>
+      </div>
+    </TicketToolbar>
   );
 }
 
