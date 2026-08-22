@@ -1,11 +1,13 @@
 import { Button } from 'antd';
-import { useLanguage } from '../LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 export default function LanguageToggle() {
-  const { lang, toggle } = useLanguage();
+  const { i18n } = useTranslation();
+  const isEn = i18n.language.startsWith('en');
+  const other = isEn ? 'ar' : 'en';
   return (
-    <Button onClick={toggle} type="default" size="small">
-      {lang === 'en' ? 'العربية' : 'English'}
+    <Button onClick={() => i18n.changeLanguage(other)} type="primary">
+      {isEn ? 'العربية' : 'English'}
     </Button>
   );
 }

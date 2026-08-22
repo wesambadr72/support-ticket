@@ -1,42 +1,51 @@
 import { Form, Input, Button, Card, Select } from 'antd';
 import { getTicketById } from '../data/tickets';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLanguage } from '../LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 function TicketEdit() {
   const navigate = useNavigate();
   const { id } = useParams();
   const ticket = getTicketById(id);
-  const {t} = useLanguage();
+  const { t } = useTranslation('tickets');
   
   return (
     <div className='p-24 max-w-150 mx-auto'>
-      <Card title={t.editTicket}>
+      <Card title={t('editTicket')}>
         <Form
           layout="vertical"
-          initialValues={{ status: 'Open' }}
+          initialValues={{ title: ticket?.title, status: ticket?.status, priority: ticket?.priority }}
           onFinish={(values) => {
                 if (ticket) {
-                  Object.assign(ticket, values);
+                  Object.assign(ticket, {...values});
                 }
             console.log(id, values);
             navigate('/tickets');
           }}
         >
-          <Form.Item name="title" label={t.title} rules={[{ required: true }]}>
-            <Input placeholder={ticket?.title}></Input>
+          <Form.Item name="title" label={t('ticketTitle')} rules={[{ required: true }]}>
+            <Input/>
           </Form.Item>
-          <Form.Item name="status" label={t.status}>
+          <Form.Item name="status" label={t('status')}>
             <Select
               options={[
-                { value: 'Open', label: t.open },
-                { value: 'In Progress', label: t.inProgress },
-                { value: 'Closed', label: t.closed },
+                { value: 'Open', label: t('open') },
+                { value: 'In Progress', label: t('inProgress') },
+                { value: 'Closed', label: t('closed') },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name="priority" label={t('priority')}>
+            <Select
+              options={[
+                { value: 'High', label: t('high') },
+                { value: 'Medium', label: t('medium') },
+                { value: 'Low', label: t('low') },
               ]}
             />
           </Form.Item>
           <Button type="primary" htmlType="submit">
-            {t.update}
+            {t('update')}
           </Button>
         </Form>
       </Card>
