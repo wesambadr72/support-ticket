@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
-import TicketToolbar from '../components/layout/TicketToolbar';
+import PageLayout from '../components/layout/pagelayout';
 import { ticketService } from '../services/ticket.service';
 import { STATUS_FILTER_VALUES } from '../constants/tickets';
 import { priorityColor, priorityLabelKey, statusLabelKey } from '../utils/ticket';
@@ -60,7 +60,7 @@ function TicketList() {
   ];
 
   return (
-    <TicketToolbar>
+    <PageLayout>
       <div>
         <div className='flex justify-between items-center mb-4'>
           <h2 className='text-3xl text-center flex-1'>{t('mainTitle')}</h2>
@@ -78,7 +78,7 @@ function TicketList() {
         </div>
         <Table rowKey="id" dataSource={filteredData} columns={columns} />
       </div>
-    </TicketToolbar>
+    </PageLayout>
   );
 }
 

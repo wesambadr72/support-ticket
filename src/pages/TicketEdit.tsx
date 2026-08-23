@@ -1,7 +1,7 @@
 import { Form, Input, Button, Card, Select } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import TicketToolbar from '../components/layout/TicketToolbar';
+import PageLayout from '../components/layout/pagelayout';
 import { ticketService } from '../services/ticket.service';
 import { TICKET_PRIORITIES, TICKET_STATUSES } from '../constants/tickets';
 import { priorityLabelKey, statusLabelKey } from '../utils/ticket';
@@ -18,7 +18,7 @@ function TicketEdit() {
     : undefined;
 
   return (
-    <TicketToolbar>
+    <PageLayout>
       <div className='p-24 max-w-150 mx-auto'>
       <Card title={t('editTicket')}>
         <Form<TicketInput>
@@ -50,7 +50,7 @@ function TicketEdit() {
         </Form>
       </Card>
       </div>
-    </TicketToolbar>
+    </PageLayout>
   );
 }
 

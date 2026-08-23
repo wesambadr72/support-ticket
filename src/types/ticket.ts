@@ -8,5 +8,4 @@ export interface Ticket {
   priority: Priority;
 }
 
-/** Data needed to create or update a ticket (without its id). */
 export type TicketInput = Omit<Ticket, 'id'>;

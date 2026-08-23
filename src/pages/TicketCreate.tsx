@@ -1,7 +1,7 @@
 import { Form, Input, Button, Card, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import TicketToolbar from '../components/layout/TicketToolbar';
+import PageLayout from '../components/layout/pagelayout';
 import { ticketService } from '../services/ticket.service';
 import { TICKET_PRIORITIES, TICKET_STATUSES } from '../constants/tickets';
 import { priorityLabelKey, statusLabelKey } from '../utils/ticket';
@@ -12,7 +12,7 @@ function TicketCreate() {
   const { t } = useTranslation('tickets');
 
   return (
-    <TicketToolbar>
+    <PageLayout>
       <div className='p-24 max-w-1/2 mx-auto'>
       <Card title={t('createTicket')}>
         <Form<TicketInput>
@@ -41,7 +41,7 @@ function TicketCreate() {
         </Form>
       </Card>
       </div>
-    </TicketToolbar>
+    </PageLayout>
   );
 }
 

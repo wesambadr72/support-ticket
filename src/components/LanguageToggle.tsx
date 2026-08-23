@@ -7,7 +7,7 @@ export default function LanguageToggle() {
   const other = isEn ? 'ar' : 'en';
   return (
     <Button onClick={() => i18n.changeLanguage(other)} type="primary">
-      {isEn ? 'العربية' : 'English'}
+      {isEn ? 'عربي' : 'English'}
     </Button>
   );
 }

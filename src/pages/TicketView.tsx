@@ -2,7 +2,7 @@ import { Descriptions, Card, Button, Statistic, Select, message } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import TicketToolbar from '../components/layout/TicketToolbar';
+import PageLayout from '../components/layout/pagelayout';
 import { ticketService } from '../services/ticket.service';
 import { TICKET_STATUSES } from '../constants/tickets';
 import { statusLabelKey } from '../utils/ticket';
@@ -28,7 +28,7 @@ function TicketView() {
   };
 
   return (
-    <TicketToolbar>
+    <PageLayout>
       <div className='p-6 max-w-1/2 mx-auto'>
       <Card
         title={t('TicketDetail')}
@@ -52,12 +52,12 @@ function TicketView() {
           </Descriptions.Item>
           <Descriptions.Item label={t('priority')}>{ticket?.priority}</Descriptions.Item>
         </Descriptions>
-        <Button type="primary" color='orange' variant="outlined" style={{ marginTop: 16 }}>
+        <Button type="primary" variant="outlined" style={{ marginTop: 16 }}>
           <Link to="/tickets" style={{ textDecoration: 'none' }}>{t('back')}</Link>
         </Button>
       </Card>
       </div>
-    </TicketToolbar>
+    </PageLayout>
   );
 }
 
