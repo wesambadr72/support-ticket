@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
-import PageLayout from '../components/layout/pagelayout';
+import PageLayout from '../components/layout/PageLayout';
 import { ticketService } from '../services/ticket.service';
 import { STATUS_FILTER_VALUES } from '../constants/tickets';
 import { priorityColor, priorityLabelKey, statusLabelKey } from '../utils/ticket';

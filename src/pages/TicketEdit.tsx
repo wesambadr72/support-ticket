@@ -1,7 +1,7 @@
 import { Form, Input, Button, Card, Select } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import PageLayout from '../components/layout/pagelayout';
+import PageLayout from '../components/layout/PageLayout';
 import { ticketService } from '../services/ticket.service';
 import { TICKET_PRIORITIES, TICKET_STATUSES } from '../constants/tickets';
 import { priorityLabelKey, statusLabelKey } from '../utils/ticket';

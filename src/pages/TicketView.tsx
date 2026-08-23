@@ -2,7 +2,7 @@ import { Descriptions, Card, Button, Statistic, Select, message } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import PageLayout from '../components/layout/pagelayout';
+import PageLayout from '../components/layout/PageLayout';
 import { ticketService } from '../services/ticket.service';
 import { TICKET_STATUSES } from '../constants/tickets';
 import { statusLabelKey } from '../utils/ticket';

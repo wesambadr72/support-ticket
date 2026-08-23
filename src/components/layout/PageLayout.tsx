@@ -23,7 +23,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto p-6">{children}</main>
+      <main className="flex-1 min-h-screen w-full max-w-7xl mx-auto p-6">{children}</main>
 
       <footer className="bg-surface">
         <div className="max-w-7xl mx-auto w-full px-6 py-3 text-center text-sm text-text-muted">
