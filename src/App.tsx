@@ -1,10 +1,10 @@
 import { ConfigProvider, theme as antTheme } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ThemeProvider } from '../context/ThemeProvider';
-import { useTheme } from '../context/theme';
-import '../config/i18n';
-import Router from './router';
+import { ThemeProvider } from './context/ThemeProvider';
+import { useTheme } from './context/theme';
+import './config/i18n';
+import Router from './app/router';
 
 function App() {
   return (

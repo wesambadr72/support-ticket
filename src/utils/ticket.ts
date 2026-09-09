@@ -1,9 +1,10 @@
 import type { Priority, Status } from '../types/ticket';
 
 export const statusLabelKey: Record<Status, string> = {
-  Open: 'open',
-  'In Progress': 'inProgress',
-  Closed: 'closed',
+  open: 'open',
+  'in-progress': 'in-progress',
+  resolved: 'resolved',
+  closed: 'closed',
 };
 
 export const priorityLabelKey: Record<Priority, string> = {

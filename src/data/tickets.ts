@@ -1,7 +1,0 @@
-import type { Ticket } from '../types/ticket';
-
-export const dataSource: Ticket[] = [
-  { id: '1', title: 'Bug in login page', status: 'Open', priority: 'High' },
-  { id: '2', title: 'Add export button', status: 'In Progress', priority: 'Medium' },
-  { id: '3', title: 'UI crash on mobile', status: 'Closed', priority: 'Low' },
-];

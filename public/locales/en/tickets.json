@@ -23,5 +23,12 @@
         "ticketId":"Ticket ID",
         "success":"Update Successful",
         "changeStatus":"Change Status",
-        "all":"All"
+        "all":"All",
+        "name":"Name",
+        "email":"Email",
+        "subject":"Subject",
+        "message":"Message",
+        "delete":"Delete",
+        "deleted":"Ticket deleted successfully",
+        "error":"Something went wrong"
 }

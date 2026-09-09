@@ -1,35 +1,56 @@
-import { Table, Button, Tag, Select, Space } from 'antd';
+import { Table, Button, Tag, Select, Space, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PageLayout from '../components/layout/PageLayout';
-import { ticketService } from '../services/ticket.service';
+import { AllTickets, DeleteTicket } from '../api/ticket';
 import { STATUS_FILTER_VALUES } from '../constants/tickets';
 import { priorityColor, priorityLabelKey, statusLabelKey } from '../utils/ticket';
-import type { Priority, Status } from '../types/ticket';
+import type { Priority, Status, Ticket } from '../types/ticket';
 
 function TicketList() {
   const { t } = useTranslation('tickets');
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<Status | 'All'>('All');
 
-  const filteredData = useMemo(() => {
-    const tickets = ticketService.getAll();
-    if (statusFilter === 'All') return tickets;
-    return tickets.filter((ticket) => ticket.status === statusFilter);
-  }, [statusFilter]);
+  useEffect(() => {
+    AllTickets()
+      .then(setTickets)
+      .catch(() => message.error(t('error')))
+      .finally(() => setLoading(false));
+  }, [t]);
+
+  const filteredData = useMemo(
+    () =>
+      statusFilter === 'All'
+        ? tickets
+        : tickets.filter((ticket) => ticket.status === statusFilter),
+    [tickets, statusFilter]
+  );
 
   const filterOptions = STATUS_FILTER_VALUES.map((value) => ({
     value,
     label: value === 'All' ? t('all') : t(statusLabelKey[value]),
   }));
 
+  const handleDelete = async (id: string) => {
+    try {
+      await DeleteTicket(id);
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
+      message.success(t('deleted'));
+    } catch {
+      message.error(t('error'));
+    }
+  };
+
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
+    { title: t('name'), dataIndex: 'name', key: 'name' },
     {
-      title: t('ticketTitle'),
-      dataIndex: 'title',
-      key: 'title',
+      title: t('subject'),
+      dataIndex: 'subject',
+      key: 'subject',
       render: (text: string, record: { id: string }) => (
         <Link to={`/tickets/${record.id}`}>{text}</Link>
       ),
@@ -52,9 +73,14 @@ function TicketList() {
       title: t('action'),
       key: 'actions',
       render: (_: unknown, record: { id: string }) => (
+        <>
         <Button>
           <Link to={`/tickets/${record.id}/edit`}>{t('edit')}</Link>
         </Button>
+        <Button type="primary" danger onClick={() => handleDelete(record.id)}>
+          {t('delete')}
+        </Button>
+        </>
       ),
     },
   ];
@@ -63,7 +89,7 @@ function TicketList() {
     <PageLayout>
       <div>
         <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-3xl text-center flex-1'>{t('mainTitle')}</h2>
+          <h2 className='text-3xl flex-1'>{t('mainTitle')}</h2>
           <Space>
             <Select
               value={statusFilter}
@@ -76,7 +102,7 @@ function TicketList() {
             </Link>
           </Space>
         </div>
-        <Table rowKey="id" dataSource={filteredData} columns={columns} />
+        <Table rowKey="id" dataSource={filteredData} columns={columns} loading={loading} />
       </div>
     </PageLayout>
   );

@@ -1,29 +1,52 @@
 import { Descriptions, Card, Button, Statistic, Select, message } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageLayout from '../components/layout/PageLayout';
-import { ticketService } from '../services/ticket.service';
+import { GetTicketById, UpdateTicket } from '../api/ticket';
 import { TICKET_STATUSES } from '../constants/tickets';
 import { statusLabelKey } from '../utils/ticket';
-import type { Status } from '../types/ticket';
+import type { Status, Ticket } from '../types/ticket';
 
 function TicketView() {
   const { id } = useParams();
-  const ticket = ticketService.getById(id);
   const { t } = useTranslation('tickets');
-  const [currentStatus, setCurrentStatus] = useState<Status | undefined>(ticket?.status);
+  const [ticket, setTicket] = useState<Ticket>();
+  const [currentStatus, setCurrentStatus] = useState<Status>();
+
+  useEffect(() => {
+    if (!id) return;
+    GetTicketById(id)
+      .then((data) => {
+        setTicket(data);
+        setCurrentStatus(data.status);
+      })
+      .catch(() => message.error(t('error')));
+  }, [id, t]);
 
   const statusOptions = TICKET_STATUSES.map((value) => ({
     value,
     label: t(statusLabelKey[value]),
   }));
 
-  const handleStatusChange = (value: Status) => {
+  const handleStatusChange = async (value: Status) => {
+    if (!ticket) return;
+    const previous = currentStatus;
     setCurrentStatus(value);
-    if (ticket) {
-      ticketService.updateStatus(ticket.id, value);
+    try {
+      const updated = await UpdateTicket(ticket.id, {
+        name: ticket.name,
+        email: ticket.email,
+        subject: ticket.subject,
+        message: ticket.message,
+        status: value,
+        priority: ticket.priority,
+      });
+      setTicket(updated);
       message.success(t('success'));
+    } catch {
+      setCurrentStatus(previous);
+      message.error(t('error'));
     }
   };
 
@@ -41,7 +64,8 @@ function TicketView() {
       >
         <Statistic title={t('ticketId')} value={id} />
         <Descriptions bordered column={1} style={{ marginTop: 19 }}>
-          <Descriptions.Item label={t('ticketTitle')}>{ticket?.title}</Descriptions.Item>
+          <Descriptions.Item label={t('ticketTitle')}>{ticket?.subject}</Descriptions.Item>
+          <Descriptions.Item label={t('message')}>{ticket?.message}</Descriptions.Item>
           <Descriptions.Item label={t('status')}>
             <Select
               value={currentStatus}

@@ -1,11 +1,16 @@
-export type Status = 'Open' | 'In Progress' | 'Closed';
+export type Status = 'open' | 'in-progress' | 'resolved' | 'closed';
 export type Priority = 'High' | 'Medium' | 'Low';
 
 export interface Ticket {
   id: string;
-  title: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
   status: Status;
   priority: Priority;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export type TicketInput = Omit<Ticket, 'id'>;
+export type CreateTicketInput = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
