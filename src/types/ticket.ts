@@ -1,4 +1,4 @@
-export type Status = 'open' | 'in-progress' | 'resolved' | 'closed';
+export type Status = 'to do' | 'in progress' | 'complete' | 'done';
 export type Priority = 'High' | 'Medium' | 'Low';
 
 export interface Ticket {
